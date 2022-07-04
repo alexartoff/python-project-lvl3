@@ -1,0 +1,34 @@
+name: ContinuousIntegration
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9"]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          make install
+      - name: Run linter
+        run: |
+          make lint
+      - name: Run Tests
+        run: |
+          make test
+      - name: Tests & publish code coverage
+        uses: paambaati/codeclimate-action@v3.0.0
+        env:
+          CC_TEST_REPORTER_ID: 3c2425899adeac849ce3196300b7f860bf26499e5c4fa7371d98c3e9b35301ac
+        with:
+          coverageCommand: make test-cov-xml
+          debug: true
