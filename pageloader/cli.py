@@ -13,7 +13,7 @@ def parse_args():
     parser.add_argument(
         '--output',
         type=str,
-        default=os.getcwd(),
+        default=f'{os.getcwd()}/',
         metavar='save_path',
         help=(f'set OUTPUT path for save page '
               f'or leave DEFAULT path: {os.getcwd()}'))
