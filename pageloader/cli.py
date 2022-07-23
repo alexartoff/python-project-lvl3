@@ -13,10 +13,11 @@ def parse_args():
     parser.add_argument(
         '--output',
         type=str,
-        default=f'{os.getcwd()}/',
+        default=f'{os.path.relpath(os.getcwd())}/',
         metavar='save_path',
         help=(f'set OUTPUT path for save page '
-              f'or leave DEFAULT path: {os.getcwd()}'))
+              f'or leave DEFAULT path: '
+              f'{os.path.relpath(os.getcwd())[1:]}/'))
 
     parser.add_argument(
         'url_adress',
