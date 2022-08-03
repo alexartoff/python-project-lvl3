@@ -12,9 +12,9 @@ def main():
     log_on()
 
     try:
-        logging.info('get started!')
+        logging.info('page-loader started!')
         args = parse_args()
-        logging.info(f'run download module for url {args.url_adress}')
+        logging.info(f'getting data from url {args.url_adress}')
         download(args.output, args.url_adress)
         logging.info('done. all ok. exit')
         sys.exit(0)
