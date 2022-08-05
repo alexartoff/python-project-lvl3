@@ -4,10 +4,10 @@ from bs4 import BeautifulSoup
 import requests_mock
 import pytest
 
-from pageloader.page_loader import download
-from pageloader.pathwork import make_assets_dir, make_filename, make_save_dir
-from pageloader.pathwork import parse_url_adress
-from pageloader.data import check_url, make_full_link
+from page_loader.page_loader import download
+from page_loader.pathwork import make_assets_dir, make_filename, make_save_dir
+from page_loader.pathwork import parse_url_adress
+from page_loader.data import check_url, make_full_link
 
 
 @pytest.mark.parametrize("url, expectation",

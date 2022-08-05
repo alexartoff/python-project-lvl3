@@ -6,7 +6,7 @@ import logging
 from urllib.parse import urlparse
 import urllib3
 from progress.bar import FillingSquaresBar
-from pageloader.pathwork import make_filename
+from page_loader.pathwork import make_filename
 
 
 TAGS = {"img": "src", "script": "src", "link": "href"}

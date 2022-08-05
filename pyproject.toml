@@ -4,10 +4,10 @@ version = "0.1.0"
 description = "My third education project in online school HEXLET.IO (level 3)"
 repository = "https://github.com/alexartoff/python-project-lvl3"
 authors = ["alexandertarakanov <alex.artoff@gmail.com>"]
-packages = [{include = "pageloader"},]
+packages = [{include = "page_loader"},]
 
 [tool.poetry.scripts]
-page-loader = "pageloader.scripts.loader:main"
+page-loader = "page_loader.scripts.loader:main"
 
 [tool.poetry.dependencies]
 python = "^3.8"

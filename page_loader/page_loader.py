@@ -2,9 +2,9 @@
 
 
 import logging
-from pageloader.engine import download_data, change_html
-from pageloader.pathwork import make_assets_dir, make_filename
-from pageloader.data import get_data
+from page_loader.engine import download_data, change_html
+from page_loader.pathwork import make_assets_dir, make_filename
+from page_loader.data import get_data
 
 
 def download(save_dir, url_adress):

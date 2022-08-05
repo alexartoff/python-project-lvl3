@@ -6,7 +6,7 @@ import requests
 from requests.exceptions import HTTPError
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
-from pageloader.engine import get_url_host, TAGS
+from page_loader.engine import get_url_host, TAGS
 
 
 def get_data(url_adress, assets_dir):

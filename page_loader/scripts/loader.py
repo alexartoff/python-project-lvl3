@@ -3,9 +3,9 @@
 
 import logging
 import sys
-from pageloader.log import log_on
-from pageloader.cli import parse_args
-from pageloader.page_loader import download
+from page_loader.log import log_on
+from page_loader.cli import parse_args
+from page_loader.page_loader import download
 
 
 def main():
