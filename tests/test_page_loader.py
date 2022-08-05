@@ -1,35 +1,63 @@
 from tempfile import TemporaryDirectory
 import os
+from bs4 import BeautifulSoup
 import requests_mock
 import pytest
-import pytest_cov
 
-# from pageloader.scripts import loader
 from pageloader.page_loader import download
-from pageloader.pathwork import make_assets_dir, make_filename
+from pageloader.pathwork import make_assets_dir, make_filename, make_save_dir
+from pageloader.pathwork import parse_url_adress
+from pageloader.data import check_url, make_full_link
 
 
-def test_url():
-    pass
+@pytest.mark.parametrize("url, expectation",
+                         [("http://site.com", True), 
+                          ("https://www.site.com", True),
+                         ])
+def test_url_adress(url, expectation):
+    result, _, _ = check_url(url)
+    assert result == expectation
 
 
-@pytest.mark.parametrize('save_dir, expectation',
+def test_make_full_link():
+    url = "https://ru.hexlet.io"
+    original_html = '<link href="/packs/css/application-83209dd3.css" media="all" rel="stylesheet">'
+    bs_data = BeautifulSoup(original_html, "html.parser")
+    make_full_link(bs_data, url)
+    assert str(bs_data) == '<link href="https://ru.hexlet.io/packs/css/application-83209dd3.css" media="all" rel="stylesheet"/>'
+
+
+def test_save_dir():
+    with TemporaryDirectory() as tmpd:
+        result = make_save_dir(tmpd)
+        assert result == tmpd
+
+
+@pytest.mark.parametrize("save_dir, expectation",
                          [
                             ('download',
                              'download/site-com-page_files'
+                            ),
+                            ('.',
+                             './site-com-page_files'
                             ),
                             ('download/folder',
                              'download/folder/site-com-page_files'
                             ),
                          ])
-def test_dir(save_dir, expectation):
+def test_assets_dir(save_dir, expectation):
     result = make_assets_dir(save_dir, "http://site.com/page")
     assert result == expectation
 
 
-def test_file():
+def test_make_filename():
     result = make_filename("download", "http://site.com/page")
     assert result == "download/site-com-page.html"
+
+
+def test_parse_url_adress():
+    h, p = parse_url_adress("http://site.com/page")
+    assert str(h + p) == "site-com-page"
 
 
 def test_download():
@@ -48,7 +76,6 @@ def test_download():
     url_script = "/packs/js/runtime.js"
     url_style = "/assets/application.css"
     expect_assets_dir = "ru-hexlet-io-courses_files"
-    expect_filename = "ru-hexlet-io-courses.html"
     expect_image_path = "ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png"
     expect_script_path = "ru-hexlet-io-courses_files/ru-hexlet-io-packs-js-runtime.js"
     expect_style_path = "ru-hexlet-io-courses_files/ru-hexlet-io-assets-application.css"
@@ -60,14 +87,9 @@ def test_download():
         mock.get(url_style, content=style)
         download(tmpd, url)
 
-        # html_path = os.path.join(tmpd, expect_assets_dir, expect_filename)
         image_path = os.path.join(tmpd, expect_image_path)
         script_path = os.path.join(tmpd, expect_script_path)
         style_path = os.path.join(tmpd, expect_style_path)
-
-        # with open(html_path, "r") as f:
-        #     html_data = f.read()
-        # assert html_data == downloaded_html
 
         with open(image_path, "rb") as f:
             image_data = f.read()
@@ -85,9 +107,6 @@ def test_download():
         assert len(os.listdir(current_path)) == 4
 
 
-def test_download_resourse():
-    pass
-
-
 def test_response():
-    pass
+    _, _, result = check_url('https://www.site.com')
+    assert result.status_code == 200

@@ -12,21 +12,28 @@ from pageloader.engine import get_url_host, TAGS
 def get_data(url_adress, assets_dir):
     bs_data, session_ = get_bs_data(url_adress)
     host = get_url_host(url_adress)
-    norm_links(bs_data, url_adress)
+    make_full_link(bs_data, url_adress)
     return (bs_data, session_, host, assets_dir)
 
 
 def get_bs_data(url_adress):
+    result, session_, resp = check_url(url_adress)
+    if result:
+        bs_data = BeautifulSoup(resp.content, 'html.parser')
+        return bs_data, session_
+
+
+def check_url(url_adress):
     try:
         session_ = requests.Session()
         resp = session_.get(url_adress)
         # то как видит request страницу можно проверить,
         # если скачать страницу с помощью программ curl или wget
         if resp.status_code == 200:
-            bs_data = BeautifulSoup(resp.content, 'html.parser')
-            return bs_data, session_
+            return True, session_, resp
         else:
             logging.error(f'FAIL! Error - {resp.status_code}')
+            return False, session_, resp
     except HTTPError as http_err:
         logging.error(f'HTTP error: {http_err}')
     except requests.exceptions.ConnectionError:
@@ -35,7 +42,7 @@ def get_bs_data(url_adress):
         raise requests.exceptions.InvalidSchema('Invalid Schema Error')
 
 
-def norm_links(bs_data, url):
+def make_full_link(bs_data, url):
     mod_url = f"{urlparse(url).scheme}://{urlparse(url).hostname}"
     list_ = []
     for tag in TAGS.keys():

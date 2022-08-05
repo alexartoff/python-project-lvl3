@@ -16,7 +16,7 @@ def parse_args():
         default=f'{os.path.relpath(os.getcwd())}/',
         metavar='save_path',
         help=(f'set OUTPUT path for save page '
-              f'or leave DEFAULT path: '
+              f'or leave DEFAULT (current) path: '
               f'{os.path.relpath(os.getcwd())[1:]}/'))
 
     parser.add_argument(

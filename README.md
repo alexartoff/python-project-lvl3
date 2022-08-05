@@ -19,3 +19,4 @@
 ### HOW IT WORK  
 Вызов справки по программе    *`page-loader -h`*  
 Пример запуска программы    *`page-loader --output /path/to/save http://website.com/page`*   
+[![asciicast](https://asciinema.org/a/512928.svg)](https://asciinema.org/a/512928)  
