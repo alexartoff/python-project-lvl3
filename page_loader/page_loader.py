@@ -19,7 +19,7 @@ def download(url_adress, save_dir):
         change_html(tag, data)
 
     logging.info('writing finaly edited html page')
-    filename = make_filename(assets_dir, url_adress)
+    filename = make_filename(save_dir, url_adress)
     bs_data, _, _, _ = data
     with open(filename, "w") as wf:
         wf.write(bs_data.prettify())

@@ -104,7 +104,9 @@ def test_download():
         assert style_data == style
 
         current_path = os.path.join(tmpd, expect_assets_dir)
-        assert len(os.listdir(current_path)) == 4
+        assert len(os.listdir(current_path)) == 3
+
+        assert len(os.listdir(tmpd)) == 2
 
 
 def test_response():
