@@ -7,7 +7,7 @@ from page_loader.pathwork import make_assets_dir, make_filename
 from page_loader.data import get_data
 
 
-def download(save_dir, url_adress):
+def download(url_adress, save_dir):
     assets_dir = make_assets_dir(save_dir, url_adress)
     data = get_data(url_adress, assets_dir)
 

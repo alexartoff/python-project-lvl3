@@ -85,7 +85,7 @@ def test_download():
         mock.get(url_image, content=image)
         mock.get(url_script, content=script)
         mock.get(url_style, content=style)
-        download(tmpd, url)
+        download(url, tmpd)
 
         image_path = os.path.join(tmpd, expect_image_path)
         script_path = os.path.join(tmpd, expect_script_path)
