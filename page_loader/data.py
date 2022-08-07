@@ -2,6 +2,7 @@
 
 
 import logging
+import sys
 import requests
 from requests.exceptions import HTTPError
 from urllib.parse import urlparse
@@ -23,12 +24,16 @@ def check_url(url_adress):
         # то как видит request страницу можно проверить,
         # если скачать страницу с помощью программ curl или wget
         if resp.status_code == 200:
+            logging.info(f'url "{url_adress}" response with status'
+                         f' code {resp.status_code}. continue...')
             return True, session_, resp
         else:
             logging.error(f'FAIL! Error - {resp.status_code}')
-            return False, session_, resp
+            sys.exit(1)
+            # return False, session_, resp
     except HTTPError as http_err:
         logging.error(f'HTTP error: {http_err}')
+        sys.exit(1)
     except requests.exceptions.ConnectionError:
         raise requests.exceptions.ConnectionError('Connection Error')
     except requests.exceptions.InvalidSchema:
@@ -46,3 +51,4 @@ def make_full_link(bs_data, url):
             url_tag = item.get(TAGS[tag])
             if url_tag and not urlparse(url_tag).hostname:
                 item[TAGS[tag]] = f"{mod_url}{url_tag}"
+    logging.info('data prepared for download')

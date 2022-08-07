@@ -2,14 +2,23 @@
 
 
 import os
+import sys
 import logging
 from urllib.parse import urlparse
+
+
+def check_dl_path(path):
+    if os.path.exists(path):
+        logging.info(f'directory "{path}" exist. continue...')
+    else:
+        logging.exception(f'directory "{path}" does\'t exist')
+        sys.exit(1)
 
 
 def make_dirs(dir):
     if not os.path.exists(dir):
         os.makedirs(dir)
-        logging.info(f'directories "{dir}" created')
+        logging.info(f'directory "{dir}" created')
 
 
 def make_assets_path(url):

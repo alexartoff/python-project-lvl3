@@ -19,6 +19,11 @@ def test_url_adress(url, expectation):
     assert result == expectation
 
 
+def test_base_dir():
+    assert os.path.exists("download") == True
+    assert os.path.exists("tmp") == False
+
+
 def test_make_full_link():
     url = "https://ru.hexlet.io"
     original_html = '<link href="/packs/css/application-83209dd3.css" media="all" rel="stylesheet">'
