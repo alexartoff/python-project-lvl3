@@ -31,6 +31,4 @@ def download(url_adress, base_dir_path):
     with open(filename, "w") as wf:
         wf.write(bs_data.prettify())
 
-    count_dl_files = len(os.listdir(os.path.join(base_dir_path,
-                                                 assets_dir_path)))
-    return count_dl_files
+    return filename
