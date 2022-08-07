@@ -13,7 +13,7 @@ TAGS = {"img": "src", "script": "src", "link": "href"}
 
 
 def download_data(tag, data):
-    bs_data, _, _, _ = data
+    bs_data, _, _, _, _ = data
     tag_list = bs_data.find_all(tag)
     # logging.info(tag_list)
 
@@ -28,13 +28,13 @@ def download_data(tag, data):
 
 
 def change_html(tag, data):
-    bs_data, _, _, _ = data
+    bs_data, _, _, _, _ = data
     tag_list = bs_data.find_all(tag)
     make_change(tag_list, tag, data)
 
 
 def make_download_list(tag_list, tag, data):
-    _, _, host, _ = data
+    _, _, host, _, _ = data
 
     if tag == "img":
         download_list = filter(isAllowed,
@@ -46,14 +46,15 @@ def make_download_list(tag_list, tag, data):
 
 
 def get_resourse(download_list, data):
-    _, session_, _, assets_dir = data
+    _, session_, _, base_dir, assets_dir = data
 
     bar = FillingSquaresBar(' Download: ', max=len(download_list))
+    dir = os.path.join(base_dir, assets_dir)
     with bar:
         # logging.info(download_list)
         for link in download_list:
-            if os.path.splitext(link)[1]:
-                filename = make_filename(assets_dir, link)
+            if os.path.splitext(link):  # [1]:
+                filename = make_filename(dir, link)
                 logging.debug(f'start download {filename}')
                 resp = session_.get(url=link)
                 if resp.status_code == 200:
@@ -67,7 +68,7 @@ def get_resourse(download_list, data):
 
 
 def make_change(list_, tag, data):
-    _, _, host, assets_dir = data
+    _, _, host, _, assets_dir = data
 
     for src in list_:
         tag_url = src.get(TAGS[tag])

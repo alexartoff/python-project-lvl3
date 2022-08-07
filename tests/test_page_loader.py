@@ -5,7 +5,7 @@ import requests_mock
 import pytest
 
 from page_loader.page_loader import download
-from page_loader.pathwork import make_assets_dir, make_filename, make_save_dir
+from page_loader.pathwork import make_assets_path, make_filename
 from page_loader.pathwork import parse_url_adress
 from page_loader.data import check_url, make_full_link
 
@@ -27,27 +27,9 @@ def test_make_full_link():
     assert str(bs_data) == '<link href="https://ru.hexlet.io/packs/css/application-83209dd3.css" media="all" rel="stylesheet"/>'
 
 
-def test_save_dir():
-    with TemporaryDirectory() as tmpd:
-        result = make_save_dir(tmpd)
-        assert result == tmpd
-
-
-@pytest.mark.parametrize("save_dir, expectation",
-                         [
-                            ('download',
-                             'download/site-com-page_files'
-                            ),
-                            ('.',
-                             './site-com-page_files'
-                            ),
-                            ('download/folder',
-                             'download/folder/site-com-page_files'
-                            ),
-                         ])
-def test_assets_dir(save_dir, expectation):
-    result = make_assets_dir(save_dir, "http://site.com/page")
-    assert result == expectation
+def test_make_assets_path():
+    result = make_assets_path("http://site.com/page")
+    assert result == "site-com-page_files"
 
 
 def test_make_filename():
@@ -71,25 +53,31 @@ def test_download():
         script = f.read()
     with open("tests/fixtures/application.css", "rb") as f:
         style = f.read()
-    url = "https://ru.hexlet.io/courses"
+    with open("tests/fixtures/downloaded.html", "rb") as f:
+        link_ = f.read()
+    url = "https://ru.hexlet.io"
     url_image = "/assets/professions/nodejs.png"
     url_script = "/packs/js/runtime.js"
     url_style = "/assets/application.css"
-    expect_assets_dir = "ru-hexlet-io-courses_files"
-    expect_image_path = "ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png"
-    expect_script_path = "ru-hexlet-io-courses_files/ru-hexlet-io-packs-js-runtime.js"
-    expect_style_path = "ru-hexlet-io-courses_files/ru-hexlet-io-assets-application.css"
+    url_link = "/courses"
+    expect_assets_dir = "ru-hexlet-io_files"
+    expect_image_path = "ru-hexlet-io_files/ru-hexlet-io-assets-professions-nodejs.png"
+    expect_script_path = "ru-hexlet-io_files/ru-hexlet-io-packs-js-runtime.js"
+    expect_style_path = "ru-hexlet-io_files/ru-hexlet-io-assets-application.css"
+    expect_link_path = "ru-hexlet-io_files/ru-hexlet-io-courses.html"
 
     with requests_mock.Mocker() as mock, TemporaryDirectory() as tmpd:
         mock.get(url, text=original_html)
         mock.get(url_image, content=image)
         mock.get(url_script, content=script)
         mock.get(url_style, content=style)
+        mock.get(url_link, content=link_)
         download(url, tmpd)
 
         image_path = os.path.join(tmpd, expect_image_path)
         script_path = os.path.join(tmpd, expect_script_path)
         style_path = os.path.join(tmpd, expect_style_path)
+        link_path = os.path.join(tmpd, expect_link_path)
 
         with open(image_path, "rb") as f:
             image_data = f.read()
@@ -103,8 +91,12 @@ def test_download():
             style_data = f.read()
         assert style_data == style
 
+        with open(link_path, "rb") as f:
+            link_data = f.read()
+        assert link_data == link_
+
         current_path = os.path.join(tmpd, expect_assets_dir)
-        assert len(os.listdir(current_path)) == 3
+        assert len(os.listdir(current_path)) == 4
 
         assert len(os.listdir(tmpd)) == 2
 

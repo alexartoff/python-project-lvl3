@@ -15,8 +15,8 @@ def main():
         logging.info('page-loader started!')
         args = parse_args()
         logging.info(f'getting data from url {args.url_adress}')
-        download(args.url_adress, args.output)
-        logging.info('done. all ok. exit')
+        files_count = download(args.url_adress, args.output)
+        logging.info(f'done. downloaded {files_count} files. exit')
         sys.exit(0)
     except Exception as err:
         logging.error(f'oops! {err}. Stop running...')

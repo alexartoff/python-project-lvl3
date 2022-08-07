@@ -9,19 +9,11 @@ from bs4 import BeautifulSoup
 from page_loader.engine import get_url_host, TAGS
 
 
-def get_data(url_adress, assets_dir, session_, resp):
-    # bs_data, session_ = get_bs_data(url_adress)
+def get_data(url_adress, base_dir, assets_dir, session_, resp):
     bs_data = BeautifulSoup(resp.content, 'html.parser')
     host = get_url_host(url_adress)
     make_full_link(bs_data, url_adress)
-    return (bs_data, session_, host, assets_dir)
-
-
-# def get_bs_data(url_adress):
-#     check_result, session_, resp = check_url(url_adress)
-#     if check_result:
-#         bs_data = BeautifulSoup(resp.content, 'html.parser')
-#         return bs_data, session_
+    return (bs_data, session_, host, base_dir, assets_dir)
 
 
 def check_url(url_adress):
