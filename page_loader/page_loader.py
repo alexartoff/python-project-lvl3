@@ -31,4 +31,5 @@ def download(url_adress, base_dir_path):
     with open(filename, "w") as wf:
         wf.write(bs_data.prettify())
 
-    return filename
+    if os.path.exists(filename):
+        return filename
