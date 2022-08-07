@@ -20,7 +20,7 @@ def test_url_adress(url, expectation):
 
 
 def test_base_dir():
-    assert os.path.exists("download") == True
+    assert os.path.exists(".") == True
     assert os.path.exists("tmp") == False
 
 

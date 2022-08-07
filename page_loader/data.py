@@ -29,8 +29,7 @@ def check_url(url_adress):
             return True, session_, resp
         else:
             logging.error(f'FAIL! Error - {resp.status_code}')
-            sys.exit(1)
-            # return False, session_, resp
+            return False, session_, resp
     except HTTPError as http_err:
         logging.error(f'HTTP error: {http_err}')
         sys.exit(1)
