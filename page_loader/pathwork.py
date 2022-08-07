@@ -12,7 +12,6 @@ def check_dl_path(path):
         logging.info(f'directory "{path}" exist. continue...')
     else:
         logging.exception(f'directory "{path}" does\'t exist')
-        sys.exit(1)
 
 
 def make_dirs(dir):
