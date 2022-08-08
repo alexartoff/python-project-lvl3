@@ -18,4 +18,4 @@ def log_on():
 
     logging.basicConfig(format='[ %(asctime)s ] - %(levelname)s: %(message)s',
                         handlers=[file_handler, stream_handler],
-                        level=logging.DEBUG)
+                        level=logging.INFO)
