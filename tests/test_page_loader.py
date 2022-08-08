@@ -11,17 +11,13 @@ from page_loader.data import check_url, make_full_link
 
 
 @pytest.mark.parametrize("url, expectation",
-                         [("http://site.com", True), 
+                         [("http://site.com", True),
                           ("https://www.site.com", True),
-                         ])
+                         ]
+                        )
 def test_url_adress(url, expectation):
     result, _, _ = check_url(url)
     assert result == expectation
-
-
-def test_base_dir():
-    assert os.path.exists(".") == True
-    assert os.path.exists("tmp") == False
 
 
 def test_make_full_link():
@@ -50,8 +46,6 @@ def test_parse_url_adress():
 def test_download():
     with open("tests/fixtures/original.html", "r") as f:
         original_html = f.read()
-    with open("tests/fixtures/downloaded.html", "r") as f:
-        downloaded_html = f.read()
     with open("tests/fixtures/nodejs.png", "rb") as f:
         image = f.read()
     with open("tests/fixtures/runtime.js", "rb") as f:
