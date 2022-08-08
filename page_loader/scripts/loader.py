@@ -20,9 +20,9 @@ def main():
     except Exception as err:
         logging.error(f'oops! {err}. Stop running...')
         sys.exit(1)
-    except BaseException:
-        logging.error('CLI error! Stop running...')
-        sys.exit(2)
+    except BaseException as err:
+        logging.error(f'CLI error! Stop running... /// error code: {err}')
+        sys.exit(0)
 
 
 if __name__ == "__main__":
