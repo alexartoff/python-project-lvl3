@@ -24,6 +24,9 @@ patch:
 lint:
 	poetry run flake8 page_loader
 
+lint-test:
+	poetry run flake8 tests/test_page_loader.py
+
 test:
 	poetry run pytest -vv
 

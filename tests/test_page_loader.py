@@ -10,11 +10,13 @@ from page_loader.pathwork import parse_url_adress
 from page_loader.data import check_url, make_full_link
 
 
-@pytest.mark.parametrize("url, expectation",
-                         [("http://site.com", True),
-                          ("https://www.site.com", True),
-                         ]
-                        )
+@pytest.mark.parametrize(
+    "url, expectation",
+    [
+        ("http://site.com", True),
+        ("https://www.site.com", True),
+    ]
+)
 def test_url_adress(url, expectation):
     result, _, _ = check_url(url)
     assert result == expectation
@@ -22,10 +24,13 @@ def test_url_adress(url, expectation):
 
 def test_make_full_link():
     url = "https://ru.hexlet.io"
-    original_html = '<link href="/packs/css/application-83209dd3.css" media="all" rel="stylesheet">'
+    original_html = ('<link href="/packs/css/application-83209dd3.css"'
+                     ' media="all" rel="stylesheet">')
     bs_data = BeautifulSoup(original_html, "html.parser")
     make_full_link(bs_data, url)
-    assert str(bs_data) == '<link href="https://ru.hexlet.io/packs/css/application-83209dd3.css" media="all" rel="stylesheet"/>'
+    assert str(bs_data) == ('<link href="https://ru.hexlet.io/packs/'
+                            'css/application-83209dd3.css" media="all"'
+                            ' rel="stylesheet"/>')
 
 
 def test_make_assets_path():
@@ -60,7 +65,8 @@ def test_download():
     url_style = "/assets/application.css"
     url_link = "/courses"
     expect_assets_dir = "ru-hexlet-io_files"
-    expect_image_path = "ru-hexlet-io_files/ru-hexlet-io-assets-professions-nodejs.png"
+    expect_image_path = ("ru-hexlet-io_files/"
+                         "ru-hexlet-io-assets-professions-nodejs.png")
     expect_script_path = "ru-hexlet-io_files/ru-hexlet-io-packs-js-runtime.js"
     expect_style_path = "ru-hexlet-io_files/ru-hexlet-io-assets-application.css"
     expect_link_path = "ru-hexlet-io_files/ru-hexlet-io-courses.html"
