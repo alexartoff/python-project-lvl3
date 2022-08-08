@@ -12,7 +12,6 @@ def main():
     log_on()
 
     try:
-        logging.info('page-loader started!')
         args = parse_args()
         files_path = download(args.url_adress, args.output)
         logging.info(f'html file downloaded and modified "{files_path}"')
@@ -21,6 +20,9 @@ def main():
     except Exception as err:
         logging.error(f'oops! {err}. Stop running...')
         sys.exit(1)
+    except BaseException:
+        logging.error('CLI error! Stop running...')
+        sys.exit(2)
 
 
 if __name__ == "__main__":

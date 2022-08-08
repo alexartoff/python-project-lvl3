@@ -10,6 +10,7 @@ from page_loader.data import get_data, check_url
 
 
 def download(url_adress, base_dir_path):
+    logging.info('page-loader started!')
     logging.info(f'checking directory exist - "{base_dir_path}"')
     check_dl_path(base_dir_path)
     logging.info(f'checking url - {base_dir_path}')
