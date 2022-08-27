@@ -13,7 +13,7 @@ def download(url_adress, base_dir_path):
     logging.info('page-loader started!')
     logging.info(f'checking directory exist - "{base_dir_path}"')
     check_dl_path(base_dir_path)
-    logging.info(f'checking url - {base_dir_path}')
+    logging.info(f'checking url - {url_adress}')
     check_result, session_, resp = check_url(url_adress)
     if check_result:
         assets_dir_path = make_assets_path(url_adress)

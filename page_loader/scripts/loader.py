@@ -3,14 +3,13 @@
 
 import logging
 import sys
-from page_loader.log import log_on
+from page_loader.log import init_logging
 from page_loader.cli import parse_args
 from page_loader.page_loader import download
 
 
+@init_logging
 def main():
-    log_on()
-
     try:
         args = parse_args()
         files_path = download(args.url_adress, args.output)
