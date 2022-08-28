@@ -7,7 +7,7 @@ import requests
 from requests.exceptions import HTTPError
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
-from page_loader.engine import get_url_host, TAGS
+from page_loader.engine import get_url_host, ATTRIBUTE_MAPPING
 
 
 def get_data(url_adress, base_dir, assets_dir, session_, resp):
@@ -42,12 +42,12 @@ def check_url(url_adress):
 def make_full_link(bs_data, url):
     mod_url = f"{urlparse(url).scheme}://{urlparse(url).hostname}"
     list_ = []
-    for tag in TAGS.keys():
+    for tag in ATTRIBUTE_MAPPING.keys():
         list_.extend(bs_data.find_all(tag))
 
-    for tag in TAGS.keys():
+    for tag in ATTRIBUTE_MAPPING.keys():
         for item in list_:
-            url_tag = item.get(TAGS[tag])
+            url_tag = item.get(ATTRIBUTE_MAPPING[tag])
             if url_tag and not urlparse(url_tag).hostname:
-                item[TAGS[tag]] = f"{mod_url}{url_tag}"
+                item[ATTRIBUTE_MAPPING[tag]] = f"{mod_url}{url_tag}"
     logging.info('data prepared for download')

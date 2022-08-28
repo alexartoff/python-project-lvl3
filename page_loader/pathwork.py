@@ -6,13 +6,6 @@ import logging
 from urllib.parse import urlparse
 
 
-def check_dl_path(path):
-    if os.path.exists(path):
-        logging.info(f'directory "{path}" exist. continue...')
-    else:
-        raise logging.exception(f'directory "{path}" does\'t exist')
-
-
 def make_dirs(dir):
     if not os.path.exists(dir):
         os.makedirs(dir)

@@ -9,13 +9,12 @@ from progress.bar import FillingSquaresBar
 from page_loader.pathwork import make_filename
 
 
-TAGS = {"img": "src", "script": "src", "link": "href"}
+ATTRIBUTE_MAPPING = {"img": "src", "script": "src", "link": "href"}
 
 
 def download_data(tag, data):
     bs_data, _, _, _, _ = data
     tag_list = bs_data.find_all(tag)
-    # logging.info(tag_list)
 
     if not tag_list:
         return logging.info(f"no tag <{tag}> for download")
@@ -37,11 +36,14 @@ def make_download_list(tag_list, tag, data):
     _, _, host, _, _ = data
 
     if tag == "img":
-        download_list = filter(isAllowed,
-                               [link.get(TAGS[tag]) for link in tag_list])
+        download_list = filter(
+            isAllowed,
+            [link.get(ATTRIBUTE_MAPPING[tag]) for link in tag_list]
+        )
     if tag == "script" or tag == "link":
-        download_list = filter(lambda item: isLocal(item, host),
-                               [link.get(TAGS[tag]) for link in tag_list])
+        download_list = filter(
+            lambda item: isLocal(item, host),
+            [link.get(ATTRIBUTE_MAPPING[tag]) for link in tag_list])
     return list(download_list)
 
 
@@ -51,7 +53,6 @@ def get_resourse(download_list, data):
     bar = FillingSquaresBar(' Download: ', max=len(download_list))
     dir = os.path.join(base_dir, assets_dir)
     with bar:
-        # logging.info(download_list)
         for link in download_list:
             if os.path.splitext(link):  # [1]:
                 filename = make_filename(dir, link)
@@ -71,11 +72,17 @@ def make_change(list_, tag, data):
     _, _, host, _, assets_dir = data
 
     for src in list_:
-        tag_url = src.get(TAGS[tag])
+        tag_url = src.get(ATTRIBUTE_MAPPING[tag])
         if tag == "img" and isAllowed(tag_url):
-            src[TAGS[tag]] = make_filename(assets_dir, tag_url)
+            src[ATTRIBUTE_MAPPING[tag]] = make_filename(
+                assets_dir,
+                tag_url
+            )
         if (tag == "script" or tag == "link") and isLocal(tag_url, host):
-            src[TAGS[tag]] = make_filename(assets_dir, tag_url)
+            src[ATTRIBUTE_MAPPING[tag]] = make_filename(
+                assets_dir,
+                tag_url
+            )
 
 
 def isAllowed(link):
