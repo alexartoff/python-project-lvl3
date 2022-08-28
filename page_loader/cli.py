@@ -28,6 +28,6 @@ def parse_args():
     if os.path.exists(parser.parse_args().output):
         return parser.parse_args()
     else:
-        raise (AssertionError)(
+        raise (Exception)(
             f'directory "{parser.parse_args().output}" does\'t exist'
         )
