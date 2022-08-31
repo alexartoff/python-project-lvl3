@@ -12,6 +12,7 @@ build/
 develop-eggs/
 dist/
 downloads/
+download/
 eggs/
 .eggs/
 lib/
@@ -131,4 +132,4 @@ dmypy.json
 
 # Mac OS
 .DS_Store
-.vscode/settings.json
+.vscode

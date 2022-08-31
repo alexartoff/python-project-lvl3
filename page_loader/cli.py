@@ -25,9 +25,4 @@ def parse_args():
         type=str,
         metavar='url_adress')
 
-    if os.path.exists(parser.parse_args().output):
-        return parser.parse_args()
-    else:
-        raise (Exception)(
-            f'directory "{parser.parse_args().output}" does\'t exist'
-        )
+    return parser.parse_args()

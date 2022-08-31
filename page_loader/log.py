@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+
+
 import logging
 import sys
 
@@ -6,9 +9,12 @@ def init_logging(func):
     def wrapper():
         logger = logging.getLogger(__name__)
         logger.setLevel(logging.INFO)
-        formatter_stream = logging.Formatter(' [ %(levelname)s ]: %(message)s')
-        formatter = logging.Formatter('[ %(asctime)s ] - %(name)s - '
-                                      '%(levelname)s: %(message)s')
+        formatter_stream = logging.Formatter(
+            ' [ %(levelname)s ]: %(message)s'
+        )
+        formatter = logging.Formatter(
+            '[ %(asctime)s ] - %(name)s - %(levelname)s: %(message)s'
+        )
 
         stream_handler = logging.StreamHandler(sys.stdout)
         stream_handler.setLevel(logging.INFO)
