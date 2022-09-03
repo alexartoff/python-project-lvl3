@@ -16,6 +16,7 @@ def download(url, base):
 
     # 3&4. parse html --> make dict, change data
     resource_dict = prepare_data(data, url)
+    print(resource_dict)
 
     # 5. make file_name for parsed html page and save it
     filename = make_filename(base, url)

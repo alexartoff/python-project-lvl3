@@ -7,8 +7,10 @@ from itertools import zip_longest
 from bs4 import BeautifulSoup
 import requests
 from requests.exceptions import HTTPError
-from page_loader.url_modifier import make_filename, make_assets_path
+from page_loader.url_modifier import make_assets_path
 from page_loader.url_modifier import isAllowed, isLocal
+from urllib.parse import urlparse
+import os
 
 
 ATTRIBUTE_MAPPING = {"img": "src", "script": "src", "link": "href"}
@@ -46,13 +48,13 @@ def prepare_data(data, url):
 
     for tag in ["img", "script", "link"]:
         tag_list = data.find_all(tag)
-        # print(f">>>prepare_data {tag}\n{tag_list}")
-        if not tag_list:
+        tag_full_link_list = make_full_link(tag, data.find_all(tag), url)
+        if not tag_full_link_list:
             logging.debug(f"no tag <{tag}> for download")
             continue
 
         # add in dict key-value for downloading
-        download_dict.update(make_dict(tag_list, tag, url))
+        download_dict.update(make_dict(tag_full_link_list, tag, url))
 
         # change html for current tag
         change_html(tag_list, tag, url)
@@ -62,28 +64,37 @@ def prepare_data(data, url):
 def change_html(tag_list, tag, url):
     assets_path = make_assets_path(url)
 
-    for src in tag_list:
-        tag_url = src.get(ATTRIBUTE_MAPPING[tag])
-
-        if (tag == "img" and isAllowed(tag_url, url)) or \
-           ((tag == "script" or tag == "link") and isLocal(tag_url, url)):
-            src[ATTRIBUTE_MAPPING[tag]] = make_filename(
+    for item in tag_list:
+        link = item[ATTRIBUTE_MAPPING[tag]]
+        if (tag == "img" and isAllowed(link, url)) or \
+           ((tag == "script" or tag == "link") and isLocal(link, url)):
+            item[ATTRIBUTE_MAPPING[tag]] = os.path.join(
                 assets_path,
-                tag_url
+                html_path(link, url)
             )
+
+
+def html_path(adr, url):
+    if urlparse(adr).hostname:
+        for_parse = adr
+    else:
+        for_parse = url
+    host = (urlparse(for_parse).hostname).replace(".", "-")
+    path = (urlparse(adr).path).replace("/", "-")
+    return (f"{host}{path}" if path[-1] != "-" else path[:-1])
 
 
 def make_dict(tag_list, tag, url):
     func_dict = {
         "img": lambda item: isAllowed(item, url),
-        "link": lambda item: isLocal(item, url),
-        "script": lambda item: isLocal(item, url),
+        # "link": lambda item: isLocal(item, url),
+        # "script": lambda item: isLocal(item, url),
     }
     link_list = list(filter(
         func_dict.get(tag),
-        [link.get(ATTRIBUTE_MAPPING[tag]) for link in tag_list]
+        tag_list
+        # [link.get(ATTRIBUTE_MAPPING[tag]) for link in tag_list]
     ))
-    # print(f">>>make_dict {link_list}")
     return dict(
         zip_longest(
             link_list,
@@ -91,3 +102,15 @@ def make_dict(tag_list, tag, url):
             fillvalue=make_assets_path(url)
         )
     )
+
+
+def make_full_link(tag, list_, url):
+    host = urlparse(url).hostname
+    output = []
+    for item in list_:
+        tag_url = item.get(ATTRIBUTE_MAPPING[tag])
+        if not urlparse(tag_url).hostname and urlparse(tag_url).path:
+            output.append(url + tag_url)
+        if urlparse(tag_url).hostname == host:
+            output.append(tag_url)
+    return output
