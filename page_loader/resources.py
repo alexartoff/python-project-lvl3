@@ -75,13 +75,15 @@ def change_html(tag_list, tag, url):
 
 
 def html_path(adr, url):
+    for_parse = url
+    path_str = str(urlparse(adr).path)
     if urlparse(adr).hostname:
         for_parse = adr
-    else:
-        for_parse = url
-    host = (urlparse(for_parse).hostname).replace(".", "-")
-    path = (urlparse(adr).path).replace("/", "-")
-    return (f"{host}{path}" if path[-1] != "-" else path[:-1])
+    if not os.path.splitext(urlparse(adr).path)[1]:
+        path_str = f"{urlparse(adr).path}.html"
+    host = str(urlparse(for_parse).hostname).replace(".", "-")
+    path = path_str.replace("/", "-")
+    return f"{host}{path}" if path[-1] != "-" else path[:-1]
 
 
 def make_dict(tag_list, tag, url):
