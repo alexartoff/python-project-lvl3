@@ -4,7 +4,7 @@
 import os
 import logging
 from progress.bar import FillingSquaresBar
-from page_loader.url_modifier import make_filename
+from page_loader.url_modifier import make_path
 
 
 def make_assets_dir(base, assets):
@@ -21,13 +21,13 @@ def download_resources(dict_, base_dir, session_):
     logging.info('start download resources')
     with bar:
         for link, path in dict_.items():
-            filename = make_filename(os.path.join(base_dir, path), link)
+            file_path = make_path(os.path.join(base_dir, path), link)
             resp = session_.get(url=link)
             if resp.status_code == 200:
-                with open(filename, "wb") as wbf:
+                with open(file_path, "wb") as wbf:
                     wbf.write(resp.content)
                     bar.next()
             else:
-                logging.error(f'download {filename}'
+                logging.error(f'download {file_path}'
                               f' FAIL! Error - {resp.status_code}')
     logging.info('download successfully')

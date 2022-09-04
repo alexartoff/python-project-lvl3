@@ -3,28 +3,41 @@
 
 import os
 from urllib.parse import urlparse
-import urllib3
 
 
-def parse_url_adress(url):
-    host = (urlparse(url).hostname).replace(".", "-")
-    path = (urlparse(url).path).replace("/", "-")
+ATTRIBUTE_MAPPING = {"img": "src", "script": "src", "link": "href"}
+
+
+def _parse_url_adress(url):
+    host = str(urlparse(url).hostname).replace(".", "-")
+    path = str(urlparse(url).path).replace("/", "-")
     if path == "":
-        return (host, "")
-    return (host, path if path[-1] != "-" else path[:-1])
+        return host, ""
+    return host, path if path[-1] != "-" else path[:-1]
+
+
+def html_tag_path(adr, url):
+    for_parse = url
+    path_str = str(urlparse(adr).path)
+    if urlparse(adr).hostname:
+        for_parse = adr
+    if not os.path.splitext(urlparse(adr).path)[1]:
+        path_str = f"{urlparse(adr).path}.html"
+    host = str(urlparse(for_parse).hostname).replace(".", "-")
+    path = path_str.replace("/", "-")
+    return f"{host}{path}" if path[-1] != "-" else path[:-1]
 
 
 def make_assets_path(url):
-    h, p = parse_url_adress(url)
-    assets_dir = f"{h}{p}_files"
-    return assets_dir
+    h, p = _parse_url_adress(url)
+    return f"{h}{p}_files"
 
 
-def make_filename(dir, url_adress):
-    h, p = parse_url_adress(url_adress)
+def make_path(dir_, url_adress):
+    h, p = _parse_url_adress(url_adress)
     if os.path.splitext(p)[1]:
-        return os.path.join(dir, f"{h}{p}")
-    return os.path.join(dir, f"{h}{p}.html")
+        return os.path.join(dir_, f"{h}{p}")
+    return os.path.join(dir_, f"{h}{p}.html")
 
 
 def isAllowed(link, url):
@@ -34,16 +47,23 @@ def isAllowed(link, url):
 
 
 def isLocal(link, url):
-    host = get_url_host(url)
     if not urlparse(link).hostname and urlparse(link).path:
         return True
-    if host and urlparse(link).hostname == host:
+    if urlparse(link).hostname == urlparse(url).hostname:
         return True
 
 
-def get_url_host(url_adress):
-    try:
-        url_host = urlparse(url_adress).hostname
-        return url_host
-    except urllib3.connectionpool.ConnectionError:
-        raise urllib3.connectionpool.ConnectionError('Connection Error')
+def _get_host_url(url):
+    return f"{urlparse(url).scheme}://{urlparse(url).hostname}"
+
+
+def make_full_link(tag, list_, url):
+    output = []
+
+    for item in list_:
+        tag_url = item.get(ATTRIBUTE_MAPPING[tag])
+        if not urlparse(tag_url).hostname and urlparse(tag_url).path:
+            output.append(_get_host_url(url) + tag_url)
+        if urlparse(tag_url).hostname == urlparse(url).hostname:
+            output.append(tag_url)
+    return output

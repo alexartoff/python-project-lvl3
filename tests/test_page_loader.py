@@ -1,22 +1,11 @@
 from tempfile import TemporaryDirectory
 import os
-from bs4 import BeautifulSoup
 import requests_mock
 import pytest
-from urllib.parse import urljoin
 
 from page_loader.page_loader import download
-from page_loader.url_modifier import make_assets_path, make_filename
-from page_loader.url_modifier import parse_url_adress
-from page_loader.resources import check_url, prepare_data
-
-
-# @pytest.mark.parametrize('code', [404, ])
-# def test_response_with_error(requests_mock, code):
-#     bad_url = "https://site.com/404"
-#     url = urljoin(bad_url, str(code))
-#     requests_mock.get(url, status_code=code)
-#     assert download(bad_url, "download") == "!!!"
+from page_loader.url_modifier import make_assets_path, make_path
+from page_loader.resources import check_url
 
 
 @pytest.mark.parametrize(
@@ -36,14 +25,9 @@ def test_make_assets_path():
     assert result == "site-com-page_files"
 
 
-def test_make_filename():
-    result = make_filename("download", "http://site.com/page")
+def test_make_path():
+    result = make_path("download", "http://site.com/page")
     assert result == "download/site-com-page.html"
-
-
-def test_parse_url_adress():
-    h, p = parse_url_adress("http://site.com/page")
-    assert str(h + p) == "site-com-page"
 
 
 def test_download():
@@ -163,4 +147,4 @@ def test_download():
 
 def test_response():
     result = check_url('https://www.site.com')
-    assert result == True
+    assert result is True
