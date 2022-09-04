@@ -3,11 +3,20 @@ import os
 from bs4 import BeautifulSoup
 import requests_mock
 import pytest
+from urllib.parse import urljoin
 
 from page_loader.page_loader import download
 from page_loader.url_modifier import make_assets_path, make_filename
 from page_loader.url_modifier import parse_url_adress
 from page_loader.resources import check_url, prepare_data
+
+
+# @pytest.mark.parametrize('code', [404, ])
+# def test_response_with_error(requests_mock, code):
+#     bad_url = "https://site.com/404"
+#     url = urljoin(bad_url, str(code))
+#     requests_mock.get(url, status_code=code)
+#     assert download(bad_url, "download") == "!!!"
 
 
 @pytest.mark.parametrize(
@@ -18,7 +27,7 @@ from page_loader.resources import check_url, prepare_data
     ]
 )
 def test_url_adress(url, expectation):
-    result, _, _ = check_url(url)
+    result = check_url(url)
     assert result == expectation
 
 
@@ -153,5 +162,5 @@ def test_download():
 
 
 def test_response():
-    _, _, result = check_url('https://www.site.com')
-    assert result.status_code == 200
+    result = check_url('https://www.site.com')
+    assert result == True

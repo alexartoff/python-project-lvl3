@@ -9,10 +9,9 @@ from page_loader.files_dirs import download_resources, make_assets_dir
 
 def download(url, base):
     # check url.
-    check_result, session_, resp = check_url(url)
-    if check_result:
+    if check_url(url):
         # load original html page.
-        data = get_data(resp)
+        data, session_ = get_data(url)
 
         # parse html --> make dict, change data
         resource_dict = prepare_data(data, url)
@@ -33,3 +32,4 @@ def download(url, base):
 
         # done, return filename
         return filename
+    raise Exception('URL error')

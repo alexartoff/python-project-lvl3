@@ -16,9 +16,11 @@ import os
 ATTRIBUTE_MAPPING = {"img": "src", "script": "src", "link": "href"}
 
 
-def get_data(resp):
+def get_data(url_adress):
+    session_ = requests.Session()
+    resp = session_.get(url_adress)
     bs_data = BeautifulSoup(resp.content, 'html.parser')
-    return bs_data
+    return bs_data, session_
 
 
 def check_url(url_adress):
@@ -30,10 +32,7 @@ def check_url(url_adress):
         if resp.status_code == 200:
             logging.info(f'url "{url_adress}" response with status'
                          f' code {resp.status_code}. continue...')
-            return True, session_, resp
-        else:
-            logging.error(f'FAIL! Error - {resp.status_code}')
-            sys.exit()
+            return True
     except HTTPError as http_err:
         logging.error(f'HTTP error: {http_err}')
         sys.exit(1)
