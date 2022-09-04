@@ -22,17 +22,6 @@ def test_url_adress(url, expectation):
     assert result == expectation
 
 
-# def test_make_full_link():
-#     url = "https://ru.hexlet.io"
-#     original_html = ('<link href="/packs/css/application-83209dd3.css"'
-#                      ' media="all" rel="stylesheet">')
-#     bs_data = BeautifulSoup(original_html, "html.parser")
-#     prepare_data(bs_data, url)
-#     assert str(bs_data) == ('<link href="https://ru.hexlet.io/packs/'
-#                             'css/application-83209dd3.css" media="all"'
-#                             ' rel="stylesheet"/>')
-
-
 def test_make_assets_path():
     result = make_assets_path("http://site.com/page")
     assert result == "site-com-page_files"
@@ -104,6 +93,63 @@ def test_download():
         assert len(os.listdir(current_path)) == 4
 
         assert len(os.listdir(tmpd)) == 2
+
+
+# def test_download_more():
+#     with open("tests/examples/fixtures/site-com-blog-about.html", "r") as f:
+#         original_html = f.read()
+#     with open("tests/examples/fixtures/expected/site-com-blog-about_files/site-com-photos-me.jpg", "rb") as f:
+#         image = f.read()
+#     with open("tests/examples/fixtures/expected/site-com-blog-about_files/site-com-assets-scripts.js", "rb") as f:
+#         script = f.read()
+#     with open("tests/examples/fixtures/expected/site-com-blog-about_files/site-com-blog-about-assets-styles.css", "rb") as f:
+#         style = f.read()
+#     with open("tests/examples/fixtures/expected/site-com-blog-about_files/site-com-blog-about.html", "rb") as f:
+#         link_ = f.read()
+#     url = "https://site.com/blog/about"
+#     url_image = "/photos/me.jpg"
+#     url_script = "https://site.com/assets/scripts.js"
+#     url_style = "/blog/about/assets/styles.css"
+#     url_link = "/blog/about"
+#     expect_assets_dir = "site-com-blog-about_files"
+#     expect_image_path = "site-com-blog-about_files/site-com-photos-me.jpg"
+#     expect_script_path = "site-com-blog-about_files/site-com-assets-scripts.js"
+#     expect_style_path = "site-com-blog-about_files/site-com-blog-about-assets-styles.css"
+#     expect_link_path = "site-com-blog-about_files/site-com-blog-about.html"
+#
+#     with requests_mock.Mocker() as mock, TemporaryDirectory() as tmpd:
+#         mock.get(url, text=original_html)
+#         mock.get(url_image, content=image)
+#         mock.get(url_script, content=script)
+#         mock.get(url_style, content=style)
+#         mock.get(url_link, content=link_)
+#         download(url, tmpd)
+#
+#         image_path = os.path.join(tmpd, expect_image_path)
+#         script_path = os.path.join(tmpd, expect_script_path)
+#         style_path = os.path.join(tmpd, expect_style_path)
+#         link_path = os.path.join(tmpd, expect_link_path)
+#
+#         with open(image_path, "rb") as f:
+#             image_data = f.read()
+#         assert image_data == image
+#
+#         with open(script_path, "rb") as f:
+#             script_data = f.read()
+#         assert script_data == script
+#
+#         with open(style_path, "rb") as f:
+#             style_data = f.read()
+#         assert style_data == style
+#
+#         with open(link_path, "rb") as f:
+#             link_data = f.read()
+#         assert link_data == link_
+#
+#         current_path = os.path.join(tmpd, expect_assets_dir)
+#         assert len(os.listdir(current_path)) == 4
+#
+#         assert len(os.listdir(tmpd)) == 2
 
 
 def test_response():

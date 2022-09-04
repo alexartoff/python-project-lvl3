@@ -105,12 +105,14 @@ def make_dict(tag_list, tag, url):
 
 
 def make_full_link(tag, list_, url):
+    scheme = urlparse(url).scheme
     host = urlparse(url).hostname
+    host_url = f"{scheme}://{host}"
     output = []
     for item in list_:
         tag_url = item.get(ATTRIBUTE_MAPPING[tag])
         if not urlparse(tag_url).hostname and urlparse(tag_url).path:
-            output.append(url + tag_url)
+            output.append(host_url + tag_url)
         if urlparse(tag_url).hostname == host:
             output.append(tag_url)
     return output
