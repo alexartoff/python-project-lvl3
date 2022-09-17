@@ -136,3 +136,4 @@ dmypy.json
 
 #PyCharm
 .idea
+/tests/test_donwload_more.py

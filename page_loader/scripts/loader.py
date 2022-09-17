@@ -13,9 +13,8 @@ def main():
     try:
         args = parse_args()
         files_path = download(args.url_adress, args.output)
-        if files_path:
-            logging.info(f'{files_path} done. exit')
-            sys.exit(0)
+        logging.info(f'{files_path} done. exit')
+        sys.exit(0)
     except Exception as err:
         logging.error(f'oops! {err}. Stop running...')
         sys.exit(1)

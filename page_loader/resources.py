@@ -17,26 +17,30 @@ ATTRIBUTE_MAPPING = {"img": "src", "script": "src", "link": "href"}
 
 def get_data(url_adress):
     session_ = requests.Session()
-    resp = session_.get(url_adress)
-    bs_data = BeautifulSoup(resp.content, 'html.parser')
-    return bs_data, session_
-
-
-def check_url(url_adress):
     try:
-        session_ = requests.Session()
         resp = session_.get(url_adress)
-        if resp.status_code == 200:
-            logging.info(f'url "{url_adress}" response with status'
-                         f' code {resp.status_code}. continue...')
-            return True
+        bs_data = BeautifulSoup(resp.content, 'html.parser')
+        return bs_data, session_
     except HTTPError as http_err:
         logging.error(f'HTTP error: {http_err}')
         sys.exit(1)
-    except requests.exceptions.ConnectionError:
-        raise requests.exceptions.ConnectionError('Connection Error')
-    except requests.exceptions.InvalidSchema:
-        raise requests.exceptions.InvalidSchema('Invalid Schema Error')
+
+
+# def check_url(url_adress):
+#     try:
+#         session_ = requests.Session()
+#         resp = session_.get(url_adress)
+#         if resp.status_code == 200:
+#             logging.info(f'url "{url_adress}" response with status'
+#                          f' code {resp.status_code}. continue...')
+#             return True
+#     except HTTPError as http_err:
+#         logging.error(f'HTTP error: {http_err}')
+#         sys.exit(1)
+#     except requests.exceptions.ConnectionError:
+#         raise requests.exceptions.ConnectionError('Connection Error')
+#     except requests.exceptions.InvalidSchema:
+#         raise requests.exceptions.InvalidSchema('Invalid Schema Error')
 
 
 def prepare_data(data, url):

@@ -1,23 +1,23 @@
 from tempfile import TemporaryDirectory
 import os
 import requests_mock
-import pytest
+# import pytest
 
 from page_loader.page_loader import download
 from page_loader.url_modifier import make_assets_path, make_path
-from page_loader.resources import check_url
+# from page_loader.resources import check_url
 
 
-@pytest.mark.parametrize(
-    "url, expectation",
-    [
-        ("http://site.com", True),
-        ("https://www.site.com", True),
-    ]
-)
-def test_url_adress(url, expectation):
-    result = check_url(url)
-    assert result == expectation
+# @pytest.mark.parametrize(
+#     "url, expectation",
+#     [
+#         ("http://site.com", True),
+#         ("https://www.site.com", True),
+#     ]
+# )
+# def test_url_adress(url, expectation):
+#     result = check_url(url)
+#     assert result == expectation
 
 
 def test_make_assets_path():
@@ -88,63 +88,6 @@ def test_download():
         assert len(os.listdir(tmpd)) == 2
 
 
-# def test_download_more():
-#     with open("tests/examples/fixtures/site-com-blog-about.html", "r") as f:
-#         original_html = f.read()
-#     with open("tests/examples/fixtures/expected/site-com-blog-about_files/site-com-photos-me.jpg", "rb") as f:
-#         image = f.read()
-#     with open("tests/examples/fixtures/expected/site-com-blog-about_files/site-com-assets-scripts.js", "rb") as f:
-#         script = f.read()
-#     with open("tests/examples/fixtures/expected/site-com-blog-about_files/site-com-blog-about-assets-styles.css", "rb") as f:
-#         style = f.read()
-#     with open("tests/examples/fixtures/expected/site-com-blog-about_files/site-com-blog-about.html", "rb") as f:
-#         link_ = f.read()
-#     url = "https://site.com/blog/about"
-#     url_image = "/photos/me.jpg"
-#     url_script = "https://site.com/assets/scripts.js"
-#     url_style = "/blog/about/assets/styles.css"
-#     url_link = "/blog/about"
-#     expect_assets_dir = "site-com-blog-about_files"
-#     expect_image_path = "site-com-blog-about_files/site-com-photos-me.jpg"
-#     expect_script_path = "site-com-blog-about_files/site-com-assets-scripts.js"
-#     expect_style_path = "site-com-blog-about_files/site-com-blog-about-assets-styles.css"
-#     expect_link_path = "site-com-blog-about_files/site-com-blog-about.html"
-#
-#     with requests_mock.Mocker() as mock, TemporaryDirectory() as tmpd:
-#         mock.get(url, text=original_html)
-#         mock.get(url_image, content=image)
-#         mock.get(url_script, content=script)
-#         mock.get(url_style, content=style)
-#         mock.get(url_link, content=link_)
-#         download(url, tmpd)
-#
-#         image_path = os.path.join(tmpd, expect_image_path)
-#         script_path = os.path.join(tmpd, expect_script_path)
-#         style_path = os.path.join(tmpd, expect_style_path)
-#         link_path = os.path.join(tmpd, expect_link_path)
-#
-#         with open(image_path, "rb") as f:
-#             image_data = f.read()
-#         assert image_data == image
-#
-#         with open(script_path, "rb") as f:
-#             script_data = f.read()
-#         assert script_data == script
-#
-#         with open(style_path, "rb") as f:
-#             style_data = f.read()
-#         assert style_data == style
-#
-#         with open(link_path, "rb") as f:
-#             link_data = f.read()
-#         assert link_data == link_
-#
-#         current_path = os.path.join(tmpd, expect_assets_dir)
-#         assert len(os.listdir(current_path)) == 4
-#
-#         assert len(os.listdir(tmpd)) == 2
-
-
-def test_response():
-    result = check_url('https://www.site.com')
-    assert result is True
+# def test_response():
+#     result = check_url('https://www.site.com')
+#     assert result is True
