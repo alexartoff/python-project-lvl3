@@ -1,23 +1,9 @@
 from tempfile import TemporaryDirectory
 import os
 import requests_mock
-# import pytest
 
 from page_loader.page_loader import download
 from page_loader.url_modifier import make_assets_path, make_path
-# from page_loader.resources import check_url
-
-
-# @pytest.mark.parametrize(
-#     "url, expectation",
-#     [
-#         ("http://site.com", True),
-#         ("https://www.site.com", True),
-#     ]
-# )
-# def test_url_adress(url, expectation):
-#     result = check_url(url)
-#     assert result == expectation
 
 
 def test_make_assets_path():
@@ -86,8 +72,3 @@ def test_download():
         assert len(os.listdir(current_path)) == 4
 
         assert len(os.listdir(tmpd)) == 2
-
-
-# def test_response():
-#     result = check_url('https://www.site.com')
-#     assert result is True
