@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
 
-import sys
+# import sys
 import logging
 from itertools import zip_longest
 from bs4 import BeautifulSoup
 import requests
-from requests.exceptions import HTTPError
+# from requests.exceptions import HTTPError
 from page_loader.url_modifier import make_assets_path, make_full_link
 from page_loader.url_modifier import isAllowed, isLocal, html_tag_path
 import os
@@ -17,13 +17,15 @@ ATTRIBUTE_MAPPING = {"img": "src", "script": "src", "link": "href"}
 
 def get_data(url_adress):
     session_ = requests.Session()
-    try:
-        resp = session_.get(url_adress)
+    resp = session_.get(url_adress)
+    if resp.status_code == 200:
         bs_data = BeautifulSoup(resp.content, 'html.parser')
         return bs_data, session_
-    except HTTPError as http_err:
-        logging.error(f'HTTP error: {http_err}')
-        sys.exit(1)
+    raise Exception(
+        logging.error(f'HTTP error: {url_adress} - {resp.status_code}')
+    )
+    # logging.error(f'HTTP error: {http_err}')
+    # sys.exit(1)
 
 
 # def check_url(url_adress):
