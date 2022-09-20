@@ -1,6 +1,9 @@
 from tempfile import TemporaryDirectory
 import os
+
+import pytest
 import requests_mock
+from requests_mock.exceptions import MockException
 
 from page_loader.page_loader import download
 from page_loader.url_modifier import make_assets_path, make_path
@@ -17,15 +20,15 @@ def test_make_path():
 
 
 def test_download():
-    with open("tests/fixtures/original.html", "r") as f:
+    with open("tests/fixtures/site.html", "r") as f:
         original_html = f.read()
-    with open("tests/fixtures/nodejs.png", "rb") as f:
+    with open("tests/fixtures/expected/site_files/nodejs.png", "rb") as f:
         image = f.read()
-    with open("tests/fixtures/runtime.js", "rb") as f:
+    with open("tests/fixtures/expected/site_files/runtime.js", "rb") as f:
         script = f.read()
-    with open("tests/fixtures/application.css", "rb") as f:
+    with open("tests/fixtures/expected/site_files/application.css", "rb") as f:
         style = f.read()
-    with open("tests/fixtures/downloaded.html", "rb") as f:
+    with open("tests/fixtures/expected/site_files/site.html", "rb") as f:
         link_ = f.read()
     url = "https://ru.hexlet.io"
     url_image = "/assets/professions/nodejs.png"
@@ -72,3 +75,28 @@ def test_download():
         assert len(os.listdir(current_path)) == 4
 
         assert len(os.listdir(tmpd)) == 2
+
+
+def test_download_filesystem():
+    with pytest.raises(FileNotFoundError):
+        download('https://www.google.com/', 'bad_path')
+
+
+def test_download_connection():
+    with pytest.raises(Exception):
+        download('httq:/bad_url', 'download')
+
+
+@pytest.mark.parametrize(
+    "code, exp",
+    [
+        (404, ConnectionError),
+        (500, ConnectionError),
+    ]
+)
+def test_download_site_error(code, exp):
+    url = "http://site.com"
+    with requests_mock.Mocker() as mock:
+        mock.get(url, status_code=code)
+        with pytest.raises(exp):
+            download(url, 'download')

@@ -18,12 +18,16 @@ ATTRIBUTE_MAPPING = {
 
 def get_data(url_adress):
     session_ = requests.Session()
-    resp = session_.get(url_adress)
-    if resp.status_code == 200:
-        bs_data = BeautifulSoup(resp.content, 'html.parser')
-        return bs_data, session_
-    raise Exception(
-        logging.error(f'HTTP error: {url_adress} - {resp.status_code}')
+    if session_:
+        resp = session_.get(url_adress)
+        if resp.status_code == 200:
+            bs_data = BeautifulSoup(resp.content, 'html.parser')
+            return bs_data, session_
+        raise ConnectionError(
+            logging.error(f'HTTP error: {url_adress} - {resp.status_code}')
+        )
+    raise ConnectionError(
+        logging.error("Can't perform request")
     )
 
 

@@ -8,7 +8,7 @@ from progress.bar import FillingSquaresBar
 
 def make_assets_dir(base, assets):
     if not os.path.exists(base):
-        raise Exception("download directory does't exist")
+        raise FileNotFoundError("download directory does't exist")
     os.makedirs(os.path.join(base, assets))
     logging.info(f'directory "{assets}" created')
 
