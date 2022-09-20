@@ -29,22 +29,38 @@ def get_data(url_adress):
 
 def prepare_data(data, url):
     tags = []
-    # filter tags by ATTRIBUTE_MAPPING, locality, allowed file extension
-    for tag in ATTRIBUTE_MAPPING.keys():
-        _ = []
-        for tag_item in data.find_all(tag):
-            tag_value = ATTRIBUTE_MAPPING[tag]
-            if tag_value in tag_item.attrs.keys() and\
-                    isLocal(tag_item[tag_value], url):
-                _.append(tag_item)
-        tags.extend(_)
-    f1 = []
-    for t in tags:
-        if t.name != 'img' or\
-                (t.name == 'img' and isAllowed(t.attrs['src'], url)):
-            f1.append(t)
-    # print(f1)
-    return _get_pretty_and_assets(data, tags, url)
+    # filter tags by ATTRIBUTE_MAPPING, locality
+    for html_tag in ATTRIBUTE_MAPPING.keys():
+        first_filter = list(filter(
+            lambda tag: _attr_mapping(html_tag, tag),
+            data.find_all(html_tag)
+        ))
+
+        tag_link = ATTRIBUTE_MAPPING[html_tag]
+        second_filter = list(filter(
+            lambda tag: isLocal(tag[tag_link], url),
+            first_filter
+        ))
+        tags.extend(second_filter)
+
+    # filter tags by allowed file extension
+    third_filter = list(filter(
+        lambda tag: _allowed_file_ext(tag, url),
+        tags
+    ))
+    return _get_pretty_and_assets(data, third_filter, url)
+
+
+def _attr_mapping(html_tag, tag_data):
+    if ATTRIBUTE_MAPPING[html_tag] in tag_data.attrs.keys():
+        return True
+
+
+def _allowed_file_ext(tag, url):
+    src = ATTRIBUTE_MAPPING.get(tag.name)
+    if tag.name != 'img' or \
+            (tag.name == 'img' and isAllowed(tag.attrs[src], url)):
+        return True
 
 
 def _get_pretty_and_assets(data, tags, url):
@@ -52,71 +68,15 @@ def _get_pretty_and_assets(data, tags, url):
     # make links and change html in source html data
     assets = []
     for tag in tags:
-        link, full_assets_path = '', ''
-        if 'src' in tag.attrs.keys():
-            link = make_full_link(tag['src'], url)
-            full_assets_path = os.path.join(
-                assets_path,
-                html_tag_path(link, url)
-            )
-            tag['src'] = os.path.join(full_assets_path)
-        if 'href' in tag.attrs.keys():
-            link = make_full_link(tag['href'], url)
-            full_assets_path = os.path.join(
-                assets_path,
-                html_tag_path(link, url)
-            )
-            tag['href'] = os.path.join(full_assets_path)
-
+        link = make_full_link(
+            tag[ATTRIBUTE_MAPPING.get(tag.name)],
+            url
+        )
+        full_assets_path = os.path.join(
+            assets_path,
+            html_tag_path(link, url)
+        )
+        tag[ATTRIBUTE_MAPPING.get(tag.name)] = os.path.join(full_assets_path)
         to_list = (link, full_assets_path)
         assets.append(to_list)
     return data.prettify(), assets
-
-
-# def prepare_data(data, url):
-#     download_dict = {}
-#
-#     for tag in ["img", "script", "link"]:
-#         tag_full_link_list = make_full_link(tag, data.find_all(tag), url)
-#         if not tag_full_link_list:
-#             logging.debug(f"no tag <{tag}> for download")
-#             continue
-#
-#         # add in dict key-value for downloading
-#         download_dict.update(_make_dict(tag_full_link_list, tag, url))
-#
-#         # change html for current tag
-#         change_html(data.find_all(tag), tag, url)
-#     return download_dict
-
-
-# def change_html(tag_list, tag, url):
-#     assets_path = make_assets_path(url)
-#
-#     for item in tag_list:
-#         link = item[ATTRIBUTE_MAPPING[tag]]
-#         if (tag == "img" and isAllowed(link, url)) or \
-#            ((tag == "script" or tag == "link") and isLocal(link, url)):
-#             item[ATTRIBUTE_MAPPING[tag]] = os.path.join(
-#                 assets_path,
-#                 html_tag_path(link, url)
-#             )
-
-
-# def _make_dict(tag_list, tag, url):
-#     func_dict = {
-#         "img": lambda item: isAllowed(item, url),
-#         # "link": lambda item: isLocal(item, url),
-#         # "script": lambda item: isLocal(item, url),
-#     }
-#     link_list = list(filter(
-#         func_dict.get(tag),
-#         tag_list
-#     ))
-#     return dict(
-#         zip_longest(
-#             link_list,
-#             [],
-#             fillvalue=make_assets_path(url)
-#         )
-#     )

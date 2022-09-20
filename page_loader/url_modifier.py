@@ -5,7 +5,12 @@ import os
 from urllib.parse import urlparse
 
 
-ATTRIBUTE_MAPPING = {"img": "src", "script": "src", "link": "href"}
+ATTRIBUTE_MAPPING = {
+    "img": "src",
+    "script": "src",
+    "link": "href"
+}
+ALLOWED_EXTENSIONS = [".jpg", ".png"]
 
 
 def _parse_url_adress(url):
@@ -45,7 +50,7 @@ def make_path(dir_, url_adress):
 
 def isAllowed(link, url):
     file_ext = os.path.splitext(os.path.split(link)[1])
-    if file_ext[1] in [".jpg", ".png"] and isLocal(link, url):
+    if file_ext[1] in ALLOWED_EXTENSIONS and isLocal(link, url):
         return True
 
 
@@ -58,18 +63,6 @@ def isLocal(link, url):
 
 def _get_host_url(url):
     return f"{urlparse(url).scheme}://{urlparse(url).hostname}"
-
-
-# def make_full_link(tag, list_, url):
-#     output = []
-#
-#     for item in list_:
-#         tag_url = item.get(ATTRIBUTE_MAPPING[tag])
-#         if not urlparse(tag_url).hostname and urlparse(tag_url).path:
-#             output.append(_get_host_url(url) + tag_url)
-#         if urlparse(tag_url).hostname == urlparse(url).hostname:
-#             output.append(tag_url)
-#     return output
 
 
 def make_full_link(link, url):
