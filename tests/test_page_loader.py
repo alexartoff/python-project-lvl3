@@ -3,7 +3,6 @@ import os
 
 import pytest
 import requests_mock
-from requests_mock.exceptions import MockException
 
 from page_loader.page_loader import download
 from page_loader.url_modifier import make_assets_path, make_path
