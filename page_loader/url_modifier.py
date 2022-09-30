@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-
-
 import os
 from urllib.parse import urlparse
 
@@ -37,15 +34,15 @@ def html_tag_path(adr, url):
 
 
 def make_assets_path(url):
-    h, p = _parse_url_adress(url)
-    return f"{h}{p}_files"
+    host, path = _parse_url_adress(url)
+    return f"{host}{path}_files"
 
 
 def make_path(dir_, url_adress):
-    h, p = _parse_url_adress(url_adress)
-    if os.path.splitext(p)[1]:
-        return os.path.join(dir_, f"{h}{p}")
-    return os.path.join(dir_, f"{h}{p}.html")
+    host, path = _parse_url_adress(url_adress)
+    if os.path.splitext(path)[1]:
+        return os.path.join(dir_, f"{host}{path}")
+    return os.path.join(dir_, f"{host}{path}.html")
 
 
 def isAllowed(link, url):

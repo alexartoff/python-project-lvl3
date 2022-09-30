@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-
-
 import logging
 from bs4 import BeautifulSoup
 import requests
@@ -35,24 +32,24 @@ def prepare_data(data, url):
     tags = []
     # filter tags by ATTRIBUTE_MAPPING, locality
     for html_tag in ATTRIBUTE_MAPPING.keys():
-        first_filter = list(filter(
+        filtered_by_tag = list(filter(
             lambda tag: _attr_mapping(html_tag, tag),
             data.find_all(html_tag)
         ))
 
         tag_link = ATTRIBUTE_MAPPING[html_tag]
-        second_filter = list(filter(
+        filtered_is_local = list(filter(
             lambda tag: isLocal(tag[tag_link], url),
-            first_filter
+            filtered_by_tag
         ))
-        tags.extend(second_filter)
+        tags.extend(filtered_is_local)
 
     # filter tags by allowed file extension
-    third_filter = list(filter(
+    filtered_by_extension = list(filter(
         lambda tag: _allowed_file_ext(tag, url),
         tags
     ))
-    return _get_pretty_and_assets(data, third_filter, url)
+    return _get_pretty_and_assets(data, filtered_by_extension, url)
 
 
 def _attr_mapping(html_tag, tag_data):

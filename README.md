@@ -3,7 +3,6 @@
 |------:|-------|
 | [![Actions Status](https://github.com/alexartoff/python-project-lvl3/workflows/hexlet-check/badge.svg?branch=main)](https://github.com/alexartoff/python-project-lvl3/actions) | Hexlet check status |
 | [![Maintainability](https://api.codeclimate.com/v1/badges/2dc46b440ef5a7a2b861/maintainability)](https://codeclimate.com/github/alexartoff/python-project-lvl3/maintainability) | CodeClimate maintainability |
-| ![Linter Flake8 check](https://github.com/alexartoff/python-project-lvl3/actions/workflows/mylint.yml/badge.svg?branch=main) | Linter Flake8 check |
 | [![Continuous Integration check](https://github.com/alexartoff/python-project-lvl3/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/alexartoff/python-project-lvl3/actions/workflows/python-package.yml) | Continuous Integration check |
 | [![Test Coverage](https://api.codeclimate.com/v1/badges/2dc46b440ef5a7a2b861/test_coverage)](https://codeclimate.com/github/alexartoff/python-project-lvl3/test_coverage) | Test coverage |
    

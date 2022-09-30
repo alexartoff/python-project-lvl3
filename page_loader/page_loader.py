@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-
-
 import logging
 from page_loader.url_modifier import make_assets_path, make_path
 from page_loader.resources import get_data, prepare_data
